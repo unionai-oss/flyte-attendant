@@ -1,0 +1,5 @@
+faiss-cpu
+flytekit>=1.3.1
+gitpython
+langchain
+openai
