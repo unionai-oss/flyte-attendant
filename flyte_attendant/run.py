@@ -1,4 +1,4 @@
-"""Garvis entrypoint."""
+"""Flyte attendant entrypoint."""
 
 import itertools
 from pathlib import Path
