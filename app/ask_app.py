@@ -64,6 +64,8 @@ st.write(st.session_state["answer"])
 with st.expander("Flyte info"):
     st.write({
         "config file": config_file,
-        "UNIONAI_APP_CLIENT_SECRET": os.environ.get("UNIONAI_APP_CLIENT_SECRET"),
     })
+    with open(config_file) as f:
+        config = f.read()
+    st.code(config)
     st.write(remote)
