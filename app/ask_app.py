@@ -8,7 +8,11 @@ import streamlit as st
 
 
 remote = FlyteRemote(
-    Config.auto(os.environ.get("FLYTE_CONFIG_FILE", "./app-config.yaml")),
+    config=Config.auto(
+        os.path.join(
+            os.path.abspath(os.path.dirname(__file__)), "app-config.yaml"
+        )
+    ),
     default_project=os.environ.get("FLYTE_PROJECT", "flyte-attendant"),
     default_domain=os.environ.get("FLYTE_DOMAIN", "development"),
 )
@@ -50,6 +54,7 @@ def ask_question():
     flyte_workflow = remote.fetch_workflow(
         name="flyte_attendant.workflows.chat_support.ask",
     )
+    print("Executing workflow")
     execution = remote.execute(flyte_workflow, inputs={"question": question})
     print(f"Running workflow at {remote.generate_console_url(execution)}")
     execution = remote.wait(execution)
