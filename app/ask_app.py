@@ -7,12 +7,11 @@ from flytekit.configuration import Config
 import streamlit as st
 
 
+config_file = os.path.join(
+    os.path.abspath(os.path.dirname(__file__)), "app-config.yaml"
+)
 remote = FlyteRemote(
-    config=Config.auto(
-        os.path.join(
-            os.path.abspath(os.path.dirname(__file__)), "app-config.yaml"
-        )
-    ),
+    config=Config.auto(config_file),
     default_project=os.environ.get("FLYTE_PROJECT", "flyte-attendant"),
     default_domain=os.environ.get("FLYTE_DOMAIN", "development"),
 )
@@ -61,3 +60,10 @@ def ask_question():
 
 st.button("Submit", on_click=ask_question)
 st.write(st.session_state["answer"])
+
+with st.expander("Flyte info"):
+    st.write({
+        "config file": config_file,
+        "UNIONAI_APP_CLIENT_SECRET": os.environ.get("UNIONAI_APP_CLIENT_SECRET"),
+    })
+    st.write(remote)
