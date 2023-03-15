@@ -177,3 +177,9 @@ to it.
 ```bash
 export UNIONAI_APP_CLIENT_SECRET='<SECRET_VALUE>'
 ```
+
+Run the streamlit app:
+
+```bash
+streamlit run app/ask_app.py
+```

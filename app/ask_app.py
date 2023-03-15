@@ -46,6 +46,7 @@ question = st.text_area(
 )
 
 def ask_question():
+    print("Fetching workflow")
     flyte_workflow = remote.fetch_workflow(
         name="flyte_attendant.workflows.chat_support.ask",
     )
