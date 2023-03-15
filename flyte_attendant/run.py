@@ -40,7 +40,7 @@ def get_github_documents(
                 )
 
 
-def get_search_index(
+def create_search_index(
     documents: Iterable[Document],
     chunk_size: int = 1024,
 ) -> FAISS:
@@ -57,7 +57,11 @@ def get_search_index(
     )
 
 
-def answer_question(question: str, search_index: FAISS):
+def load_search_index(path: str) -> FAISS:
+    return FAISS.load_local(path, OpenAIEmbeddings())
+
+
+def answer_question(question: str, search_index: FAISS) -> dict:
     llm = OpenAI(temperature=0.9)
     chain = load_qa_with_sources_chain(llm)
     answer = chain(
@@ -69,9 +73,9 @@ def answer_question(question: str, search_index: FAISS):
     return answer
 
 
-def ask(question: str):
+def ask(question: str) -> str:
     docs = get_github_documents("https://github.com/flyteorg/flytesnacks")
-    search_index = get_search_index(docs)
+    search_index = create_search_index(docs)
     answer = answer_question(question, search_index)
     return answer
 
@@ -82,4 +86,5 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("question", type=str)
     args = parser.parse_args()
-    print(ask(args.question)["output_text"])
+    answer = ask(args.question)["output_text"]
+    print(answer)

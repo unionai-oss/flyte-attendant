@@ -36,8 +36,128 @@ export $(grep -v '^#' secrets.txt | xargs)
 
 ## Usage
 
+### Plain Python
+
 Call the script:
 
 ```
 python flyte_attendant/run.py "Can you explain what a Flyte workflow is at a high level?"
+```
+
+### Running Locally with Flyte
+
+```
+pyflyte run flyte_attendant/workflows/chat_support.py ask \
+    --question "Can you explain what a Flyte workflow is at a high level?"
+```
+
+## Deploying on Flyte
+
+Docker build and push:
+
+```bash
+./docker_build.sh
+docker login ghcr.io
+docker push <tag>
+```
+
+Register to a Flyte cluster:
+
+```bash
+export FLYTECTL_CONFIG=<config-file>
+pyflyte --config $FLYTECTL_CONFIG \
+    register flyte_attendant \
+    --project flytesnacks \
+    --domain development \
+    --image ghcr.io/unionai-oss/flyte-attendant:latest
+```
+
+Define Secret on the Flyte cluster:
+
+```
+kubectl create secret \
+    -n flytesnacks-development \
+    generic openai-api-key \
+    --from-literal=OPENAI_API_KEY='<SECRET>'
+```
+
+Run the workflow:
+
+```bash
+python scripts/remote_ask.py \
+    --config-file $FLYTECTL_CONFIG \
+    "Can you explain what a Flyte workflow is at a high level?"
+```
+
+## Deploying on Union Cloud
+
+Install `uctl` in your `$HOME` directory:
+
+```
+cd $HOME
+curl -sL https://raw.githubusercontent.com/unionai/uctl/main/install.sh | bash
+```
+
+Initialize the config file:
+
+```
+cd <path/to/flyte-attendant/repo>
+~/bin/uctl config init --host <host_url>
+```
+
+Set the config you're using to access the Union Cloud cluster:
+
+```
+export UCTL_CONFIG=<config-file>
+```
+
+Create a new project:
+
+```bash
+~/bin/uctl --config $UCTL_CONFIG create project \
+    --id "flyte-attendant" \
+    --labels "my-label=flyte-attendant" \
+    --description "Flyte Attendant Chat Bot" \
+    --name "flyte-attendant"
+```
+
+Register the workflow:
+
+```bash
+pyflyte --config $UCTL_CONFIG \
+    register flyte_attendant \
+    --project flyte-attendant \
+    --domain development \
+    --image ghcr.io/unionai-oss/flyte-attendant:latest
+```
+
+Define a secret on AWS via the [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/).
+Make sure to use plaintext secrets with *only the secret value itself*.
+
+Then, run:
+
+```bash
+python scripts/remote_ask.py \
+    --config-file $UCTL_CONFIG \
+    --project flyte-attendant \
+    "Can you explain what a Flyte workflow is at a high level?"
+```
+
+
+## Creating an App
+
+In Union Cloud, an app allows you to authenticate to the cluster with a secret
+key. We'll use the `app.yaml` file defined in the root of this repo to create
+an app:
+
+```bash
+~/bin/uctl create app --config $UCTL_CONFIG --appSpecFile app.yaml
+```
+
+You should see a client `NAME` and `SECRET` associated with the app. Store the
+`SECRET` value somewhere secure: this will be the last time you'll have access
+to it.
+
+```bash
+export UNIONAI_APP_CLIENT_SECRET='<SECRET_VALUE>'
 ```

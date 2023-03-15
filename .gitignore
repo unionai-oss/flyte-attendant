@@ -1,4 +1,6 @@
 secrets.txt
+faiss_index
+github_documents
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
