@@ -1,7 +1,7 @@
 admin:
   # For GRPC endpoints you might want to use dns:///flyte.myexample.com
   endpoint: dns:///playground.canary.unionai.cloud
-  clientId: ucloud-onboarding-operator
+  clientId: flyte-attendant-operator
   clientSecretEnvVar: UNIONAI_APP_CLIENT_SECRET
   insecure: false
 logger:
