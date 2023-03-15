@@ -36,7 +36,6 @@ Currently Flyte Attendant can answer high-level questions about Flyte but
 struggles to provide code examples and longer, detailed explanations of Flyte
 concepts.
 """,
-icon="ℹ️"
 )
 
 # if "question" not in st.session_state:
