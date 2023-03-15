@@ -61,10 +61,25 @@ docker login ghcr.io
 docker push <tag>
 ```
 
-Register to a Flyte cluster:
+Set the config you're using to access the Union Cloud cluster:
 
 ```bash
 export FLYTECTL_CONFIG=<config-file>
+```
+
+Create a new project (do this once):
+
+```bash
+flytectl --config $FLYTECTL_CONFIG create project \
+    --id "flyte-attendant" \
+    --labels "my-label=flyte-attendant" \
+    --description "Flyte Attendant Chat Bot" \
+    --name "flyte-attendant"
+```
+
+Register to a Flyte cluster:
+
+```bash
 pyflyte --config $FLYTECTL_CONFIG \
     register flyte_attendant \
     --project flytesnacks \
@@ -86,6 +101,7 @@ Run the workflow:
 ```bash
 python scripts/remote_ask.py \
     --config-file $FLYTECTL_CONFIG \
+    --project flyte-attendant \
     "Can you explain what a Flyte workflow is at a high level?"
 ```
 
