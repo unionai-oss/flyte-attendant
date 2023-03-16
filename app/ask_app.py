@@ -88,12 +88,12 @@ def ask_question():
 st.button("Submit", on_click=ask_question)
 st.write(st.session_state["answer"])
 
-with st.expander("Flyte info"):
-    st.write({
-        "config file": config_file,
-    })
+with st.expander("ℹ️ Union Cloud Connection Info"):
     with open(config_file) as f:
         config = f.read()
+    st.write(f"Config file: `{config_file}`")
     st.code(config)
-    st.write(remote)
-    st.write(remote.config.platform)
+    st.write("FlyteRemote")
+    st.code(remote)
+    if os.environ.get("FLYTE_SHOW_REMOTE_PLATFORM_CONFIG", "0") == "1":
+        st.code(remote.config.platform)
