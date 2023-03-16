@@ -18,20 +18,28 @@ def get_github_documents(
     url: str,
     extensions: Optional[list[str]] = None,
     exclude_files: Optional[list[str]] = None,
+    exclude_patterns: Optional[list[str]] = None,
 ) -> Iterable[Document]:
     """Fetch documents from a github url."""
     extensions = extensions or [".py", ".md", ".rst"]
     exclude_files = frozenset(exclude_files or ["__init__.py"])
+    exclude_patterns = exclude_patterns or ["**/katacoda-scenarios/**/*"]
 
     with TemporaryDirectory() as tempdir:
         repo = Repo.clone_from(url, tempdir)
         git_sha = repo.head.commit.hexsha
         git_dir = Path(tempdir)
+
+        exclude_from_patterns = [
+            *itertools.chain(*(git_dir.glob(p) for p in exclude_patterns))
+        ]
+
         for file in itertools.chain(
             *[git_dir.glob(f"**/*{ext}") for ext in extensions]
         ):
-            if file.name in exclude_files:
+            if file.name in exclude_files or file in exclude_from_patterns:
                 continue
+
             with open(file, "r") as f:
                 github_url = f"{url}/blob/{git_sha}/{file.relative_to(git_dir)}"
                 yield Document(
@@ -62,11 +70,10 @@ def load_search_index(path: str) -> FAISS:
 
 
 def answer_question(question: str, search_index: FAISS) -> dict:
-    llm = OpenAI(temperature=0.9)
-    chain = load_qa_with_sources_chain(llm)
+    chain = load_qa_with_sources_chain(OpenAI(temperature=0.9))
     answer = chain(
         {
-            "input_documents": search_index.similarity_search(question, k=4),
+            "input_documents": search_index.similarity_search(question, k=3),
             "question": question,
         },
     )
