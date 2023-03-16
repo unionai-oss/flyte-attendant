@@ -79,7 +79,7 @@ def ask_question():
 
     with st.spinner(
         f"# 👟 Running on [Union Cloud]({url}) ☁️\n"
-        "This usually takes 30 secords - 1 minute ⏱"
+        "Hang tight! This usually takes 30 seconds - 1 minutes ⏱"
     ):
         execution = remote.wait(execution)
 
