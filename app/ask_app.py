@@ -1,17 +1,36 @@
 """Streamlit app for accessing the 'ask' workflow."""
 
 import os
+from pathlib import Path
 
 from flytekit.remote import FlyteRemote
 from flytekit.configuration import Config
 import streamlit as st
 
 
-config_file = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), "app-config.yaml"
-)
+dir = Path(__file__).parent
+yaml_config = \
+f"""
+admin:
+  # For GRPC endpoints you might want to use dns:///flyte.myexample.com
+  endpoint: dns:///playground.canary.unionai.cloud
+  clientId: flyte-attendant-operator
+  clientSecretLocation: {dir / "secrets.txt"}
+  insecure: false
+logger:
+  show-source: true
+  level: 1
+"""
+
+with (dir / "secrets.txt").open("w") as f:
+    f.write(os.getenv("UNIONAI_APP_CLIENT_SECRET"))
+
+config_file = dir / "app-config-tmp.yaml"
+with config_file.open("w") as f:
+    f.write(yaml_config)
+
 remote = FlyteRemote(
-    config=Config.auto(config_file),
+    config=Config.auto(str(config_file)),
     default_project=os.environ.get("FLYTE_PROJECT", "flyte-attendant"),
     default_domain=os.environ.get("FLYTE_DOMAIN", "development"),
 )
@@ -69,3 +88,4 @@ with st.expander("Flyte info"):
         config = f.read()
     st.code(config)
     st.write(remote)
+    st.write(remote.config.platform)

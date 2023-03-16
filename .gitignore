@@ -1,6 +1,7 @@
 secrets.txt
 faiss_index
 github_documents
+app-config-tmp.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
