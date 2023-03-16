@@ -74,8 +74,12 @@ def ask_question():
     )
     print("Executing workflow")
     execution = remote.execute(flyte_workflow, inputs={"question": question})
-    print(f"Running workflow at {remote.generate_console_url(execution)}")
-    execution = remote.wait(execution)
+    url = remote.generate_console_url(execution)
+    print(f"Running workflow at {url}")
+
+    with st.spinner(f"# 👟 Running on [Union Cloud]({url}) ☁️"):
+        execution = remote.wait(execution)
+
     st.session_state["answer"] = execution.outputs['o0']
 
 st.button("Submit", on_click=ask_question)
