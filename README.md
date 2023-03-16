@@ -87,13 +87,13 @@ pyflyte --config $FLYTECTL_CONFIG \
     --image ghcr.io/unionai-oss/flyte-attendant:latest
 ```
 
-Define Secret on the Flyte cluster:
+Define a secret on the Flyte cluster:
 
 ```
 kubectl create secret \
     -n flytesnacks-development \
     generic openai-api-key \
-    --from-literal=OPENAI_API_KEY='<SECRET>'
+    --from-literal=OPENAI_API_SECRET='<SECRET>'
 ```
 
 Run the workflow:
@@ -137,6 +137,22 @@ Create a new project (do this once):
     --name "flyte-attendant"
 ```
 
+Define a secret on AWS via the [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/).
+Make sure to use plaintext secrets with *only the secret value itself*. This
+will create a secret ARN in the following format:
+
+```
+arn:aws:secretsmanager:<region>:<account_number>:secret:<secret_name>-<six_random_characters>
+```
+
+In the `flyte_attendant/workflows/chat_support.py` script, replace the
+`SECRET_GROUP` and `SECRET_KEY` global variables with the following:
+
+```python
+SECRET_GROUP = "arn:aws:secretsmanager:<region>:<account_number>:secret:"
+SECRET_KEY = "<secret_name>-<six_random_characters>"
+```
+
 Register the workflow:
 
 ```bash
@@ -146,9 +162,6 @@ pyflyte --config $UCTL_CONFIG \
     --domain development \
     --image ghcr.io/unionai-oss/flyte-attendant:latest
 ```
-
-Define a secret on AWS via the [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/).
-Make sure to use plaintext secrets with *only the secret value itself*.
 
 Then, run:
 

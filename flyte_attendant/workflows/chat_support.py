@@ -15,9 +15,15 @@ from flyte_attendant.types import FlyteDocument
 DOCS_URL = "https://github.com/flyteorg/flytesnacks"
 CACHE_VERSION = "2"
 CHUNK_SIZE = 1024
+
+# replace these values when using the AWS SecretsManager for the Union Cloud
+# deployment (see README.md)
+SECRET_GROUP = "openai-api-key"
+SECRET_KEY = "OPENAI_API_SECRET"
+
 SECRET_REQUEST = Secret(
-    group="arn:aws:secretsmanager:us-east-2:356633062068:secret:",
-    key="openai_secret_key-1QGSZb",
+    group=SECRET_GROUP,
+    key=SECRET_KEY,
     mount_requirement=Secret.MountType.FILE,
 )
 
