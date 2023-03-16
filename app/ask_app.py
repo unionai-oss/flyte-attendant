@@ -8,6 +8,9 @@ from flytekit.configuration import Config
 import streamlit as st
 
 
+LOGO = "https://docs.flyte.org/en/latest/_static/flyte_circle_gradient_1_4x4.png"
+
+
 dir = Path(__file__).parent
 yaml_config = \
 f"""
@@ -36,6 +39,7 @@ remote = FlyteRemote(
     default_domain=os.environ.get("FLYTE_DOMAIN", "development"),
 )
 
+st.image(LOGO, width=100)
 st.title("Flyte Attendant")
 st.markdown(
 """
@@ -44,14 +48,14 @@ st.markdown(
 [Github Repo](https://github.com/unionai-oss/flyte-attendant)
 
 This is a prototype application that implements a simple question-answering
-interface the uses [Flyte](https://www.flyte.org/), [LangChain](https://langchain.readthedocs.io/en/latest/),
-and the [OpenAI API](https://openai.com/product) to answer questions about
-Flyte.
+interface using [Flyte](https://www.flyte.org/), [Union Cloud](https://www.union.ai/cloud),
+[LangChain](https://langchain.readthedocs.io/en/latest/), and the
+[OpenAI API](https://openai.com/product) to answer questions about Flyte.
 """
 )
 st.info(
 """
-Currently Flyte Attendant can answer high-level questions about Flyte but
+Currently, Flyte Attendant can only answer high-level questions about Flyte but
 struggles to provide code examples and longer, more detailed explanations of
 Flyte concepts.
 """,
