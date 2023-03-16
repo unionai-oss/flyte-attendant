@@ -13,7 +13,7 @@ from flyte_attendant.types import FlyteDocument
 
 
 DOCS_URL = "https://github.com/flyteorg/flytesnacks"
-CACHE_VERSION = "1"
+CACHE_VERSION = "2"
 CHUNK_SIZE = 1024
 SECRET_REQUEST = Secret(
     group="arn:aws:secretsmanager:us-east-2:356633062068:secret:",

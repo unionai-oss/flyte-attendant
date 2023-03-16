@@ -127,7 +127,7 @@ Set the config you're using to access the Union Cloud cluster:
 export UCTL_CONFIG=<config-file>
 ```
 
-Create a new project:
+Create a new project (do this once):
 
 ```bash
 ~/bin/uctl --config $UCTL_CONFIG create project \
