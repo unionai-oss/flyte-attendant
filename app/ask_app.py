@@ -16,7 +16,7 @@ admin:
   endpoint: dns:///playground.canary.unionai.cloud
   clientId: flyte-attendant-operator
   clientSecretLocation: {dir / "secrets.txt"}
-  authType: ClientSecret
+  authType: clientSecret
   insecure: false
 logger:
   show-source: true
