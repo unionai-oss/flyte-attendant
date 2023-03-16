@@ -99,7 +99,7 @@ kubectl create secret \
 Run the workflow:
 
 ```bash
-python scripts/remote_ask.py \
+python scripts/ask_remote.py \
     --config-file $FLYTECTL_CONFIG \
     --project flyte-attendant \
     "Can you explain what a Flyte workflow is at a high level?"
@@ -153,7 +153,7 @@ Make sure to use plaintext secrets with *only the secret value itself*.
 Then, run:
 
 ```bash
-python scripts/remote_ask.py \
+python scripts/ask_remote.py \
     --config-file $UCTL_CONFIG \
     --project flyte-attendant \
     "Can you explain what a Flyte workflow is at a high level?"

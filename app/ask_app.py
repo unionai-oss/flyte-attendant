@@ -52,8 +52,8 @@ Flyte.
 st.info(
 """
 Currently Flyte Attendant can answer high-level questions about Flyte but
-struggles to provide code examples and longer, detailed explanations of Flyte
-concepts.
+struggles to provide code examples and longer, more detailed explanations of
+Flyte concepts.
 """,
 )
 
@@ -77,7 +77,10 @@ def ask_question():
     url = remote.generate_console_url(execution)
     print(f"Running workflow at {url}")
 
-    with st.spinner(f"# 👟 Running on [Union Cloud]({url}) ☁️"):
+    with st.spinner(
+        f"# 👟 Running on [Union Cloud]({url}) ☁️\n"
+        "This usually takes 30 secords - 1 minute ⏱"
+    ):
         execution = remote.wait(execution)
 
     st.session_state["answer"] = execution.outputs['o0']
